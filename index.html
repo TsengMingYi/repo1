@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智慧機械雲</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* 基本样式 */
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('article-5f6226be9f5be.jpg'); /* 背景图片路径 */
+    background-size: cover; /* 确保图片覆盖整个页面 */
+    background-position: center; /* 居中显示图片 */
+    background-attachment: fixed; /* 背景固定不随页面滚动 */
+    color: #fff; /* 设置默认文字颜色为白色 */
+  }
+
+
+    /* 侧边栏样式 */
+    .sidebar {
+      background-color: #eeeeee;
+      width: 56px;
+      height: 100vh;
+      overflow: hidden;
+      position: fixed;
+      transition: width 0.3s;
+    }
+
+    .sidebar:hover {
+      width: 200px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      color: black; /* 设置字体颜色为黑色 */
+    }
+
+    .sidebar li:hover {
+      background-color: #d2d2d2;
+    }
+
+    .sidebar li i {
+      font-size: 24px;
+      margin-right: 10px;
+      color: black; /* 设置字体颜色为黑色 */
+    }
+
+    .sidebar li span {
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      color: black; /* 设置字体颜色为黑色 */
+    }
+
+    .sidebar:hover li span {
+      opacity: 1;
+    }
+
+    /* 主内容样式 */
+    .main-content {
+    margin-left: 56px;
+    /* background: rgba(255, 255, 255, 0.8);  */
+    /* 半透明白色背景，提升可读性 */
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+    .main-content header {
+      background-color: #1976d2;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-content header h1 {
+      margin: 0;
+      flex: 1;
+    }
+
+    .main-content header .menu-icons i {
+      font-size: 20px;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    header {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: space-between;
+    background-color: #1976d2;
+    color: white;
+    padding: 10px 20px;
+    height: 60px; /* 原本 header 的高度 */
+  }
+
+    .header-logo {
+    height: 100%; /* 设置图片高度与 header 高度一致 */
+    max-height: 100%; /* 防止图片超出 header */
+  }
+
+    .filter-bar {
+      background-color: #eeeeee;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .filter-bar select {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .banner {
+      background-color: #cccccc;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      border-radius: 8px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .product-card img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .product-card h3 {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+    .product-card p {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .recommendations {
+        display: flex; /* 使内容水平排列 */
+        justify-content: space-between; /* 左右对齐 */
+        align-items: center; /* 垂直居中 */
+        margin: 20px 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .recommendations h2 {
+        font-size: 24px;
+        color: #fff; /* 白色文字适应背景 */
+        margin: 0; /* 去除默认外边距 */
+        padding-bottom: 5px;
+        border-left: 4px solid #1976d2; /* 添加左侧蓝色线条 */
+    }
+  .username {
+      font-weight: bold;
+    }
+    .logout-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .logout-button:hover {
+      background-color: #d32f2f;
+    }
+
+    #login-icon.disabled {
+      pointer-events: none; /* 禁止点击 */
+      opacity: 0.6; /* 调整视觉效果 */
+    }
+    .view-more-button {
+        background-color: #1976d2; /* 按钮背景颜色 */
+        color: white; /* 按钮文字颜色 */
+        border: none; /* 去掉边框 */
+        padding: 10px 20px; /* 内边距 */
+        border-radius: 5px; /* 圆角按钮 */
+        font-size: 14px; /* 字体大小 */
+        cursor: pointer; /* 鼠标悬浮时显示指针 */
+        transition: background-color 0.3s ease; /* 增加悬浮过渡效果 */
+    }
+
+    .view-more-button:hover {
+        background-color: #388e3c; /* 悬浮时的背景颜色 */
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <ul>
+    <li>
+    <i class="fa-solid fa-house"></i>
+      <span>主畫面</span>
+    </li>
+    <li>
+        <i class="fa-regular fa-star"></i>
+      <span>熱門排行榜</span>
+    </li>
+    <li>
+      <i>🆕</i>
+      <span>新品上架</span>
+    </li>
+
+    <hr style="border: 1px solid #d2d2d2; margin: 10px 0;">
+    <li>
+        <i class="fa-solid fa-download"></i>
+      <span>下載區</span>
+    </li>
+    <li>
+        <i class="fa-solid fa-handshake-angle"></i>
+        <span>服務網</span>
+      </li>
+    <a href="contact.html" id="contact-link">
+      <li>
+      <i>💌</i>
+      <span>聯絡客服</span>
+    </li>  
+    </a>
+  </ul>
+</div>
+
+<div class="main-content">
+  <header>
+    <img src="smb.a2fbeed4.png" class="header-logo" />
+    <h1>智慧機械雲</h1>
+    <div class="menu-icons">
+      <i>🌐</i>
+      <i id="login-icon" style="cursor: pointer;" title="登入">👤</i>
+      <span id="username-display" class="username"></span>
+      <button id="logout-button" class="logout-button" style="display: none;">登出</button>
+    </div>
+  </header>
+
+  <div class="filter-bar">
+    <select>
+      <option>產業別: All</option>
+    </select>
+    <select>
+      <option>開發商: All</option>
+    </select>
+    <select>
+      <option>類別: All</option>
+    </select>
+    <select>
+      <option>執行環境: All</option>
+    </select>
+  </div>
+
+  <div class="banner">
+    <p>横幅图片占位</p>
+  </div>
+
+  <div class="recommendations">
+    <h2>新上架與更新推薦</h2>
+    <button id="view-more" class="view-more-button">查看更多</button>
+  </div>
+
+  <div class="products">
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品1</h3>
+      <p>NT$50</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品2</h3>
+      <p>NT$55</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品3</h3>
+      <p>NT$100</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品4</h3>
+      <p>NT$50</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品5</h3>
+      <p>NT$55</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品6</h3>
+      <p>NT$100</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品7</h3>
+      <p>NT$50</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品8</h3>
+      <p>NT$55</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/80" alt="Product">
+      <h3>產品9</h3>
+      <p>NT$100</p>
+    </div>
+    <!-- 更多产品卡片 -->
+  </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    // 绑定点击事件
+    document.getElementById('login-icon').addEventListener('click', () => {
+      // 跳转到登录页面
+      window.location.href = 'login.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const username = sessionStorage.getItem('username');
+      const usernameDisplay = document.getElementById('username-display');
+      const logoutButton = document.getElementById('logout-button');
+      const loginIcon = document.getElementById('login-icon');
+
+      // 如果用户名存在，显示欢迎信息并禁用登录图标；否则启用登录图标
+      if (username) {
+        usernameDisplay.textContent = `欢迎, ${username}`;
+        logoutButton.style.display = 'inline-block'; // 显示登出按钮
+        loginIcon.classList.add('disabled'); // 禁用点击
+      } else {
+        usernameDisplay.textContent = '';
+        logoutButton.style.display = 'none'; // 隐藏登出按钮
+        loginIcon.classList.remove('disabled'); // 启用点击
+        loginIcon.addEventListener('click', () => {
+          window.location.href = 'login.html';
+        });
+      }
+
+      // 点击登出按钮时清除 sessionStorage 并刷新页面
+      logoutButton.addEventListener('click', () => {
+        sessionStorage.removeItem('username'); // 清除用户名
+        usernameDisplay.textContent = ''; // 清空欢迎信息
+        logoutButton.style.display = 'none'; // 隐藏登出按钮
+        loginIcon.classList.remove('disabled'); // 重新启用点击
+        alert('已登出');
+        window.location.reload(); // 刷新页面
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const contactLink = document.getElementById("contact-link");
+
+    contactLink.addEventListener("click", (event) => {
+      event.preventDefault(); // 阻止默认的跳转行为
+
+      const username = sessionStorage.getItem("username");
+      const apiToUse = username
+        ? "https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/member"
+        : "https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/debug";
+
+      sessionStorage.setItem("apiEndpoint", apiToUse); // 动态设置对应的 API
+
+      // 跳转到 contact.html
+      window.location.href = "contact.html";
+    });
+  });
+  </script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客服機器人</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #4caf50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.user .bubble {
+      background: #007bff;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .message.bot .bubble {
+      background: #f1f1f1;
+      color: black;
+    }
+
+    .bubble {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      line-height: 1.5;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .chat-input button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      客服機器人
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <!-- 無對話時默認顯示 -->
+      <div class="message bot">
+        <div class="bubble">
+          您好！有什麼問題可以幫助您解答嗎？
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="輸入您的問題..." />
+      <button id="send-btn" disabled>發送</button>
+    </div>
+  </div>
+
+  <script>
+    const messagesContainer = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    // 動態判斷 API 地址
+    const apiEndpoint = sessionStorage.getItem('username')
+      ? 'https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/member'
+      : 'https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/debug';
+
+    // 启用或禁用按钮
+    userInput.addEventListener('input', () => {
+      sendBtn.disabled = !userInput.value.trim();
+    });
+
+    // 发送消息
+    sendBtn.addEventListener('click', async () => {
+      const userMessage = userInput.value.trim();
+      if (!userMessage) return;
+
+      // 添加用户消息到界面
+      addMessage('user', userMessage);
+
+      // 清空输入框
+      userInput.value = '';
+      sendBtn.disabled = true;
+
+      // 调用后端接口
+      try {
+        const response = await fetch(apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ query: userMessage }),
+        });
+        const data = await response.json();
+        const botMessage = data?.data?.content || '抱歉，網路連接失敗。';
+
+        // 添加机器人回复到界面
+        addMessage('bot', botMessage);
+      } catch (error) {
+        console.error('接口调用失败:', error);
+        addMessage('bot', '网络错误，请稍后再试。');
+      }
+    });
+
+    // 添加消息到界面
+    function addMessage(sender, text) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', sender);
+      const bubbleElement = document.createElement('div');
+      bubbleElement.classList.add('bubble');
+      bubbleElement.textContent = text;
+      messageElement.appendChild(bubbleElement);
+      messagesContainer.appendChild(messageElement);
+
+      // 滚动到底部
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  </script>
+</body>
+</html>
