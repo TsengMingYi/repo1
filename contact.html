@@ -66,6 +66,7 @@
     .message.bot .bubble {
       background: #f1f1f1;
       color: black;
+      position: relative;
     }
 
     .bubble {
@@ -73,6 +74,38 @@
       padding: 10px 15px;
       border-radius: 15px;
       line-height: 1.5;
+    }
+
+    .loading-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .loading-dots span {
+      width: 6px;
+      height: 6px;
+      background: #aaa;
+      border-radius: 50%;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+      }
     }
 
     .chat-input {
@@ -135,25 +168,28 @@
       ? 'https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/member'
       : 'https://www.customer-ervice-robot.com/apps/54cb431a-2fa4-7f2e-1bc0-2acb142c233f/debug';
 
-    // 启用或禁用按钮
+    // 啟用或禁用按鈕
     userInput.addEventListener('input', () => {
       sendBtn.disabled = !userInput.value.trim();
     });
 
-    // 发送消息
+    // 發送消息
     sendBtn.addEventListener('click', async () => {
       const userMessage = userInput.value.trim();
       if (!userMessage) return;
 
-      // 添加用户消息到界面
+      // 添加用戶資訊到畫面
       addMessage('user', userMessage);
 
-      // 清空输入框
+      // 清空輸入框
       userInput.value = '';
       sendBtn.disabled = true;
 
-      // 调用后端接口
+      // 添加 Loading 動畫到畫面
+      const loadingElement = addLoadingMessage();
+
       try {
+        // 調用後端接口
         const response = await fetch(apiEndpoint, {
           method: 'POST',
           headers: {
@@ -164,15 +200,17 @@
         const data = await response.json();
         const botMessage = data?.data?.content || '抱歉，網路連接失敗。';
 
-        // 添加机器人回复到界面
-        addMessage('bot', botMessage);
+        // 替換 Loading 動畫為機器人回覆
+        replaceLoadingMessage(loadingElement, botMessage);
       } catch (error) {
-        console.error('接口调用失败:', error);
-        addMessage('bot', '网络错误，请稍后再试。');
+        console.error('接口調用失敗:', error);
+        replaceLoadingMessage(loadingElement, '網路錯誤，請稍後再試。');
+      } finally {
+        sendBtn.disabled = false; // 重新啟用按鈕
       }
     });
 
-    // 添加消息到界面
+    // 添加資訊到畫面
     function addMessage(sender, text) {
       const messageElement = document.createElement('div');
       messageElement.classList.add('message', sender);
@@ -182,8 +220,35 @@
       messageElement.appendChild(bubbleElement);
       messagesContainer.appendChild(messageElement);
 
-      // 滚动到底部
+      // 滾動到底部
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // 添加 Loading 動畫
+    function addLoadingMessage() {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', 'bot');
+      const bubbleElement = document.createElement('div');
+      bubbleElement.classList.add('bubble');
+      bubbleElement.innerHTML = `
+        <div class="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>`;
+      messageElement.appendChild(bubbleElement);
+      messagesContainer.appendChild(messageElement);
+
+      // 滾動到底部
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      return messageElement;
+    }
+
+    // 替換 Loading 動畫為機器人回覆
+    function replaceLoadingMessage(loadingElement, text) {
+      const bubbleElement = loadingElement.querySelector('.bubble');
+      bubbleElement.textContent = text;
     }
   </script>
 </body>
