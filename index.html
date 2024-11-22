@@ -141,27 +141,30 @@
     }
 
     .product-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      padding: 10px;
-    }
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 10px;
+    color: black; /* 確保整個卡片內文字顏色為黑色 */
+  }
+
+  .product-card h3 {
+    font-size: 14px;
+    margin: 10px 0;
+    color: black; /* 設置產品名稱顏色為黑色 */
+  }
+
+  .product-card p {
+    font-size: 12px;
+    color: black; /* 設置產品價格顏色為黑色 */
+  }
 
     .product-card img {
       width: 80px;
       height: 80px;
     }
 
-    .product-card h3 {
-      font-size: 14px;
-      margin: 10px 0;
-    }
-
-    .product-card p {
-      font-size: 12px;
-      color: #555;
-    }
 
     .recommendations {
         display: flex; /* 使內容水平排列 */
